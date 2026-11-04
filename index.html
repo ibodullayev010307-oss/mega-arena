@@ -2,113 +2,226 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MEGA ARENA</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Shooting Arena</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- background:#0b1020;
- color:white;
- font-family:Arial,sans-serif;
- padding:20px;
+ margin:0;background:#080d19;color:white;
+ font-family:Arial;overflow:hidden;touch-action:none
 }
-.header{
- background:#171f36;
- padding:20px;
- border-radius:18px;
+header{
+ height:55px;background:#151f35;
+ display:flex;align-items:center;
+ justify-content:space-around;font-weight:bold
 }
-h1{color:#36e0ff}
-.coin{
- color:#ffd447;
- font-size:22px;
- font-weight:bold;
+canvas{display:block;width:100%;height:calc(100dvh - 180px)}
+#controls{
+ height:125px;background:#111a2c;
+ display:flex;justify-content:space-around;align-items:center
 }
-h2{margin-top:28px}
-.games{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:14px;
-}
-.game{
- background:#171f36;
- border:1px solid #293858;
- border-radius:16px;
- padding:20px 10px;
- text-align:center;
-}
-.icon{font-size:38px}
+.pad{display:grid;grid-template-columns:45px 45px 45px;gap:4px}
 button{
- background:#1678ff;
- border:0;
- color:white;
- padding:12px;
- border-radius:10px;
- width:100%;
- font-weight:bold;
+ border:0;border-radius:12px;
+ background:#263958;color:white;
+ font-size:23px;width:45px;height:45px;
+ touch-action:none
 }
-.note{
- color:#9baac5;
- font-size:13px;
+#fire{background:#e43d50;width:85px;height:85px;border-radius:50%;font-size:17px}
+#start{
+ position:fixed;inset:0;background:#080d19ee;
+ display:flex;align-items:center;justify-content:center;
+ z-index:5;text-align:center
 }
+.box{background:#17243b;padding:28px;border-radius:20px;width:85%}
+#start button{width:100%;height:52px;background:#1684ff;font-size:17px}
+small{color:#aab8d0}
 </style>
 </head>
 <body>
 
-<div class="header">
-<h1>🎮 MEGA ARENA</h1>
-<p>Salom, o‘yinchi!</p>
-<div class="coin">🪙 5 COIN</div>
-<p class="note">Sening boshlang‘ich bonusing</p>
+<header>
+<span>🔫 SHOOTING ARENA</span>
+<span>🏆 <b id="score">0</b></span>
+<span>❤️ <b id="hp">100</b></span>
+</header>
+
+<canvas id="game"></canvas>
+
+<div id="controls">
+<div class="pad">
+<span></span><button data-m="up">⬆️</button><span></span>
+<button data-m="left">⬅️</button>
+<button data-m="down">⬇️</button>
+<button data-m="right">➡️</button>
+</div>
+<button id="fire">FIRE 🔫</button>
 </div>
 
-<h2>🔥 O‘yinlar</h2>
-
-<div class="games">
-
-<div class="game">
-<div class="icon">🔫</div>
-<h3>Shooting Arena</h3>
-<p>2–3 o‘yinchi</p>
-<button>O‘ynash</button>
+<div id="start">
+<div class="box">
+<h1>🔫 SHOOTING ARENA</h1>
+<p>Raqiblarni mag‘lub et va rekord o‘rnat!</p>
+<p><small>Harakatlan va FIRE tugmasini bosib otishma boshlagin.</small></p>
+<button id="play">O‘YINNI BOSHLASH</button>
 </div>
-
-<div class="game">
-<div class="icon">🏃</div>
-<h3>Survival Arena</h3>
-<p>2–10 o‘yinchi</p>
-<button>O‘ynash</button>
-</div>
-
-<div class="game">
-<div class="icon">🏎️</div>
-<h3>Car Racing</h3>
-<p>2–10 o‘yinchi</p>
-<button>O‘ynash</button>
-</div>
-
-<div class="game">
-<div class="icon">💣</div>
-<h3>Bomb Arena</h3>
-<p>2–10 o‘yinchi</p>
-<button>O‘ynash</button>
-</div>
-
-<div class="game">
-<div class="icon">🧗</div>
-<h3>Obstacle Challenge</h3>
-<p>2–20 o‘yinchi</p>
-<button>O‘ynash</button>
-</div>
-
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
-</script>
+const c=document.getElementById("game");
+const ctx=c.getContext("2d");
 
+let W,H,player,enemies,bullets,score,hp,running=false;
+let keys={},lastSpawn=0;
+
+function resize(){
+ W=c.width=c.clientWidth;
+ H=c.height=c.clientHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+function reset(){
+ player={x:W/2,y:H/2,r:15,speed:3.5};
+ enemies=[];bullets=[];score=0;hp=100;
+ document.getElementById("score").textContent=0;
+ document.getElementById("hp").textContent=100;
+ lastSpawn=0;
+ running=true;
+}
+
+document.getElementById("play").onclick=()=>{
+ document.getElementById("start").style.display="none";
+ resize();reset();loop();
+};
+
+document.querySelectorAll("[data-m]").forEach(b=>{
+ const k=b.dataset.m;
+ b.onpointerdown=e=>{e.preventDefault();keys[k]=true};
+ b.onpointerup=()=>keys[k]=false;
+ b.onpointerleave=()=>keys[k]=false;
+ b.oncontextmenu=e=>e.preventDefault();
+});
+
+window.addEventListener("keydown",e=>{
+ keys[{ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right"}[e.key]||e.key]=true;
+});
+window.addEventListener("keyup",e=>{
+ keys[{ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right"}[e.key]||e.key]=false;
+});
+
+let firing=false;
+const fire=document.getElementById("fire");
+fire.onpointerdown=e=>{e.preventDefault();firing=true};
+fire.onpointerup=()=>firing=false;
+fire.onpointerleave=()=>firing=false;
+
+function spawn(){
+ let side=Math.floor(Math.random()*4);
+ let x=side===0?0:side===1?W:Math.random()*W;
+ let y=side===2?0:side===3?H:Math.random()*H;
+ enemies.push({x,y,r:14,speed:1+Math.random()*0.7,hp:2});
+}
+
+function shoot(){
+ if(!enemies.length)return;
+ let target=enemies.reduce((a,b)=>
+ Math.hypot(a.x-player.x,a.y-player.y)<
+ Math.hypot(b.x-player.x,b.y-player.y)?a:b);
+ let dx=target.x-player.x,dy=target.y-player.y;
+ let d=Math.hypot(dx,dy)||1;
+ bullets.push({x:player.x,y:player.y,vx:dx/d*7,vy:dy/d*7});
+}
+
+let shotTimer=0;
+function loop(){
+ if(!running)return;
+ ctx.clearRect(0,0,W,H);
+
+ // Arena
+ ctx.fillStyle="#101a2d";
+ ctx.fillRect(0,0,W,H);
+
+ ctx.strokeStyle="#1d2d48";
+ for(let x=0;x<W;x+=35){
+ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+ }
+ for(let y=0;y<H;y+=35){
+ ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+ }
+
+ // Player movement
+ if(keys.up)player.y-=player.speed;
+ if(keys.down)player.y+=player.speed;
+ if(keys.left)player.x-=player.speed;
+ if(keys.right)player.x+=player.speed;
+
+ player.x=Math.max(15,Math.min(W-15,player.x));
+ player.y=Math.max(15,Math.min(H-15,player.y));
+
+ // Spawn enemies
+ if(Date.now()-lastSpawn>1800){
+ spawn();lastSpawn=Date.now();
+ }
+
+ // Shoot
+ if(firing && Date.now()-shotTimer>300){
+ shoot();shotTimer=Date.now();
+ }
+
+ // Bullets
+ bullets.forEach((b,i)=>{
+ b.x+=b.vx;b.y+=b.vy;
+ ctx.fillStyle="#ffd447";
+ ctx.beginPath();ctx.arc(b.x,b.y,5,0,Math.PI*2);ctx.fill();
+
+ enemies.forEach((e,j)=>{
+ if(Math.hypot(b.x-e.x,b.y-e.y)<e.r+5){
+ e.hp--;bullets.splice(i,1);
+ if(e.hp<=0){
+ enemies.splice(j,1);score++;
+ document.getElementById("score").textContent=score;
+ }
+ }
+ });
+ });
+ bullets=bullets.filter(b=>b.x>=0&&b.x<=W&&b.y>=0&&b.y<=H);
+
+ // Enemies
+ enemies.forEach(e=>{
+ let dx=player.x-e.x,dy=player.y-e.y;
+ let d=Math.hypot(dx,dy)||1;
+ e.x+=dx/d*e.speed;
+ e.y+=dy/d*e.speed;
+
+ ctx.fillStyle="#f04455";
+ ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="white";
+ ctx.font="16px Arial";ctx.fillText("👾",e.x-10,e.y+6);
+
+ if(d<player.r+e.r){
+ hp-=0.3;
+ document.getElementById("hp").textContent=Math.max(0,Math.floor(hp));
+ }
+ });
+
+ // Player
+ ctx.fillStyle="#27b7ff";
+ ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="white";
+ ctx.font="18px Arial";
+ ctx.fillText("🪖",player.x-11,player.y+6);
+
+ if(hp<=0){
+ running=false;
+ document.getElementById("start").style.display="flex";
+ document.querySelector("#start h1").textContent="💀 O‘YIN TUGADI";
+ document.querySelector("#start p").textContent="Natijang: "+score+" ochko";
+ document.getElementById("play").textContent="QAYTA O‘YNASH";
+ return;
+ }
+ requestAnimationFrame(loop);
+}
+</script>
 </body>
-  </html>
+</html>
