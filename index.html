@@ -3,35 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>ARENA FPS</title>
+<title>ARENA FPS PRO</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#000;overflow:hidden;font-family:Arial;touch-action:none;user-select:none}
+body{background:#000;overflow:hidden;font-family:Arial,sans-serif;touch-action:none;user-select:none}
 #game{display:block;width:100vw;height:100dvh}
-#hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;color:#fff;font-weight:bold;text-shadow:0 2px 4px #000}
-.stat{background:#0008;padding:8px 14px;border-radius:10px;font-size:14px}
-#crosshair{position:absolute;top:50%;left:50%;width:24px;height:24px;margin:-12px 0 0 -12px;pointer-events:none}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:#0f0;box-shadow:0 0 4px #0f0}
-#crosshair::before{width:2px;height:24px;left:11px}
-#crosshair::after{width:24px;height:2px;top:11px}
-#joy{position:absolute;bottom:30px;left:25px;width:120px;height:120px;border-radius:50%;background:#fff2;border:2px solid #fff5}
-#stick{position:absolute;width:50px;height:50px;left:35px;top:35px;background:#4af;border-radius:50%;box-shadow:0 0 14px #4af}
-#fire{position:absolute;bottom:45px;right:25px;width:85px;height:85px;border-radius:50%;background:#e33;color:#fff;border:3px solid #fff6;font-size:16px;font-weight:bold}
-#look{position:absolute;top:0;right:0;width:55%;height:80%;touch-action:none}
-#msg{position:absolute;top:42%;width:100%;text-align:center;color:#fff;font-size:26px;font-weight:bold;text-shadow:0 0 10px #000;pointer-events:none}
-#overlay{position:absolute;inset:0;background:#08111fee;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px}
-.box{background:#14223a;padding:26px;border-radius:16px;max-width:340px;width:90%}
-.box h1{font-size:22px;margin-bottom:10px}
-.box p{font-size:13px;color:#9ab;line-height:1.7;margin-bottom:16px}
-.box button{width:100%;padding:14px;border:0;border-radius:10px;background:#1878ff;color:#fff;font-size:17px;font-weight:bold}
+#hud{position:absolute;top:15px;left:15px;right:15px;display:flex;justify-content:space-between;pointer-events:none;color:#fff;font-weight:bold;text-shadow:0 2px 4px #000}
+.stat{background:rgba(0,0,0,0.5);padding:8px 14px;border-radius:8px;font-size:14px;display:flex;align-items:center;gap:5px}
+#crosshair{position:absolute;top:50%;left:50%;width:20px;height:20px;margin:-10px 0 0 -10px;pointer-events:none;z-index:10}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fff;box-shadow:0 0 5px #fff}
+#crosshair::before{width:2px;height:20px;left:9px}
+#crosshair::after{width:20px;height:2px;top:9px}
+#joy{position:absolute;bottom:40px;left:30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3)}
+#stick{position:absolute;width:45px;height:45px;left:32.5px;top:32.5px;background:rgba(255,255,255,0.7);border-radius:50%;box-shadow:0 0 10px rgba(0,0,0,0.5)}
+#fire{position:absolute;bottom:50px;right:30px;width:80px;height:80px;border-radius:50%;background:rgba(255,50,50,0.8);color:#fff;border:2px solid #fff;font-size:15px;font-weight:bold;backdrop-filter:blur(4px)}
+#look{position:absolute;top:0;right:0;width:60%;height:85%;touch-action:none}
+#msg{position:absolute;top:40%;width:100%;text-align:center;color:#ff4444;font-size:28px;font-weight:bold;text-shadow:0 0 10px #000;pointer-events:none}
+#overlay{position:absolute;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;z-index:20}
+.box{background:#1a1a1a;padding:30px;border-radius:12px;max-width:360px;width:90%;border:1px solid #333}
+.box h1{color:#00ffcc;margin-bottom:10px;font-size:24px}
+.box p{font-size:14px;color:#aaa;line-height:1.6;margin-bottom:20px}
+.box button{width:100%;padding:15px;border:0;border-radius:8px;background:#00ffcc;color:#000;font-size:18px;font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
 <div id="hud">
-  <div class="stat">🔫 ARENA FPS</div>
-  <div class="stat">🏆 <span id="score">0</span></div>
+  <div class="stat">🎯 <span id="score">0</span></div>
   <div class="stat">❤️ <span id="hp">100</span></div>
 </div>
 <div id="crosshair"></div>
@@ -40,287 +39,317 @@ body{background:#000;overflow:hidden;font-family:Arial;touch-action:none;user-se
 <button id="fire">FIRE</button>
 <div id="msg"></div>
 <div id="overlay"><div class="box">
-  <h1>🔫 ARENA FPS</h1>
-  <p>Chap joystick — harakat.<br>O'ng tomonda barmoqni suring — atrofga qarash.<br>FIRE — otish.<br>Dushmanlarni yo'q qiling!</p>
+  <h1>FPS ARENA PRO</h1>
+  <p>Chap joystick — harakatlanish.<br>O'ng barmoq bilan ekranni suring — atrofga qarash.<br>FIRE — o'q otish.</p>
   <button id="play">JANGNI BOSHLASH</button>
 </div></div>
 
 <script>
+// Sahna va Kamera (Birinchi Shaxs)
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x9bb8d4);
-scene.fog = new THREE.Fog(0x9bb8d4, 20, 70);
+scene.background = new THREE.Color(0x111820); // Tungi osmon
+scene.fog = new THREE.Fog(0x111820, 10, 80);
 
-const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 200);
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 200);
 const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('game'), antialias:true});
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0x556677, 1.8));
-const sun = new THREE.DirectionalLight(0xffffff, 1.6);
-sun.position.set(15, 25, 10);
-sun.castShadow = true;
-sun.shadow.mapSize.set(1024,1024);
-sun.shadow.camera.left=-30; sun.shadow.camera.right=30;
-sun.shadow.camera.top=30; sun.shadow.camera.bottom=-30;
-scene.add(sun);
+// Yorug'lik (Tungi jang maydoni)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambientLight);
 
-// Pol
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(120,120),
-  new THREE.MeshStandardMaterial({color:0x4a5a4a})
-);
-floor.rotation.x = -Math.PI/2;
+const moonLight = new THREE.DirectionalLight(0x88aaff, 1.2);
+moonLight.position.set(20, 40, 20);
+moonLight.castShadow = true;
+moonLight.shadow.mapSize.width = 2048;
+moonLight.shadow.mapSize.height = 2048;
+moonLight.shadow.camera.left = -40;
+moonLight.shadow.camera.right = 40;
+moonLight.shadow.camera.top = 40;
+moonLight.shadow.camera.bottom = -40;
+scene.add(moonLight);
+
+// Pol (Asfalt)
+const floorGeo = new THREE.PlaneGeometry(120, 120);
+const floorMat = new THREE.MeshStandardMaterial({color: 0x22252a, roughness: 0.8});
+const floor = new THREE.Mesh(floorGeo, floorMat);
+floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
-scene.add(new THREE.GridHelper(120,60,0x223322,0x334433));
 
-// Devorlar
-function wall(x,z,w,d){
-  const m = new THREE.Mesh(
-    new THREE.BoxGeometry(w,3,d),
-    new THREE.MeshStandardMaterial({color:0x555f6d})
-  );
-  m.position.set(x,1.5,z);
-  m.castShadow = true; m.receiveShadow = true;
-  scene.add(m);
-}
-wall(0,-30,60,1); wall(0,30,60,1);
-wall(-30,0,1,60); wall(30,0,1,60);
-
-// To'siqlar
+// To'siqlar (Beton bloklar)
 const obstacles = [];
-for(let i=0;i<18;i++){
-  const s = 1 + Math.random()*1.5;
-  const b = new THREE.Mesh(
-    new THREE.BoxGeometry(s,2,s),
-    new THREE.MeshStandardMaterial({color:0x8a7a5a})
+for(let i=0; i<25; i++){
+  const w = 2 + Math.random()*4;
+  const h = 1.5 + Math.random()*3;
+  const d = 2 + Math.random()*4;
+  const box = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({color: 0x444b54, roughness: 0.9})
   );
-  b.position.set(Math.random()*44-22, 1, Math.random()*44-22);
-  b.castShadow = true; b.receiveShadow = true;
-  scene.add(b);
-  obstacles.push(b);
+  box.position.set(Math.random()*80-40, h/2, Math.random()*80-40);
+  // O'yinchi tug'ilgan joyni bo'sh qoldirish
+  if(Math.abs(box.position.x) < 5 && Math.abs(box.position.z) < 5) continue;
+  box.castShadow = true;
+  box.receiveShadow = true;
+  scene.add(box);
+  obstacles.push(box);
 }
 
-// Askar
-function soldier(color){
-  const g = new THREE.Group();
-  const mat = new THREE.MeshStandardMaterial({color});
-  const skin = new THREE.MeshStandardMaterial({color:0xd5a77d});
-  const body = new THREE.Mesh(new THREE.BoxGeometry(.7,1,.4), mat);
-  body.position.y = 1.4; body.castShadow = true; g.add(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(.28,14,10), skin);
-  head.position.y = 2.1; head.castShadow = true; g.add(head);
-  const helm = new THREE.Mesh(new THREE.SphereGeometry(.32,14,8,0,Math.PI*2,0,Math.PI/2),
-    new THREE.MeshStandardMaterial({color:0x2b3f2b}));
-  helm.position.y = 2.22; g.add(helm);
-  const gun = new THREE.Mesh(new THREE.BoxGeometry(.15,.15,.9),
-    new THREE.MeshStandardMaterial({color:0x111}));
-  gun.position.set(.42,1.5,-.5); g.add(gun);
-  return g;
-}
+// --- O'YINCHI QUROLI (Birinchi shaxs) ---
+const gunGroup = new THREE.Group();
+const gunMat = new THREE.MeshStandardMaterial({color: 0x111111, metalness: 0.8, roughness: 0.4});
+const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.15, 0.6), gunMat);
+gunBody.position.set(0, 0, -0.3);
+const gunBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4), gunMat);
+gunBarrel.rotation.x = Math.PI/2;
+gunBarrel.position.set(0, 0.05, -0.7);
+const gunHandle = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.2, 0.1), gunMat);
+gunHandle.position.set(0, -0.15, -0.1);
+gunGroup.add(gunBody, gunBarrel, gunHandle);
+gunGroup.position.set(0.25, -0.25, -0.5); // O'ng qo'lda ushlab turish
+camera.add(gunGroup);
+scene.add(camera); // Kamerani sahnaga qo'shish shart!
 
-const player = soldier(0x2a7fff);
-scene.add(player);
-player.position.set(0,0,10);
-
-let yaw = 0, pitch = 0;
-let joy = {x:0,y:0};
-let enemies = [], bullets = [];
-let score = 0, hp = 100, running = false, firing = false, lastShot = 0;
-let lastTime = performance.now();
-
+// --- DUSHMANLAR ---
+let enemies = [];
 function spawnEnemy(){
-  if(enemies.length >= 10) return;
-  const e = soldier(0xd42a3a);
-  const a = Math.random()*Math.PI*2;
-  const d = 14 + Math.random()*10;
-  e.position.set(Math.sin(a)*d, 0, Math.cos(a)*d);
-  scene.add(e);
-  enemies.push(e);
+  if(enemies.length >= 12) return;
+  const eGroup = new THREE.Group();
+  
+  // Tana
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.6, 1.2, 0.4),
+    new THREE.MeshStandardMaterial({color: 0x8b0000}) // To'q qizil
+  );
+  body.position.y = 0.6; body.castShadow = true;
+  eGroup.add(body);
+
+  // Bosh
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.25, 8, 8),
+    new THREE.MeshStandardMaterial({color: 0x222222}) // Qora shlem
+  );
+  head.position.y = 1.45; head.castShadow = true;
+  eGroup.add(head);
+
+  // Nishon (aim uchun yorqin nuqta)
+  const targetDot = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05, 4, 4),
+    new THREE.MeshBasicMaterial({color: 0xff0000})
+  );
+  targetDot.position.set(0, 1.45, 0.25);
+  eGroup.add(targetDot);
+
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 15 + Math.random() * 20;
+  eGroup.position.set(Math.sin(angle)*dist, 0, Math.cos(angle)*dist);
+  scene.add(eGroup);
+  
+  enemies.push({ mesh: eGroup, lastShot: 0 });
 }
 
-function shoot(){
-  if(!enemies.length) return;
-  // Kamera oldidagi eng yaqin dushmanni nishonga olish (aim assist)
-  const dir = new THREE.Vector3();
-  camera.getWorldDirection(dir);
-  let best = null, bestDot = 0.85;
-  enemies.forEach(e=>{
-    const to = e.position.clone().sub(camera.position).normalize();
-    const dot = to.dot(dir);
-    if(dot > bestDot && e.position.distanceTo(player.position) < 35){
-      bestDot = dot; best = e;
-    }
-  });
-  if(!best) return;
+// --- O'QLAR ---
+let bullets = [];
+let enemyBullets = [];
 
-  const start = camera.position.clone();
-  const target = best.position.clone(); target.y += 1.4;
-  const vel = target.sub(start).normalize().multiplyScalar(1.2);
+function playerShoot() {
+  // Ekran silkinishi (Recoil)
+  gunGroup.position.z = -0.4; 
+  setTimeout(() => gunGroup.position.z = -0.5, 50);
 
-  const b = new THREE.Mesh(
-    new THREE.SphereGeometry(.1,6,6),
-    new THREE.MeshBasicMaterial({color:0xffe45b})
-  );
-  b.position.copy(start);
-  scene.add(b);
-  bullets.push({mesh:b, vel, life:2.0});
-}
+  // Kamera markazidan o'q otish
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(new THREE.Vector2(0, 0), camera); // Markaz (crosshair)
+  
+  const intersects = raycaster.intersectObjects(enemies.map(e => e.mesh), true);
 
-function update(dt){
-  if(!running) return;
+  // Vizual o'q efekti
+  const bGeo = new THREE.SphereGeometry(0.05);
+  const bMat = new THREE.MeshBasicMaterial({color: 0xffff00});
+  const bullet = new THREE.Mesh(bGeo, bMat);
+  
+  const startPos = new THREE.Vector3();
+  gunBarrel.getWorldPosition(startPos);
+  bullet.position.copy(startPos);
+  
+  const targetPos = intersects.length > 0 ? intersects[0].point : raycaster.ray.at(50, new THREE.Vector3());
+  const dir = targetPos.clone().sub(startPos).normalize();
+  
+  scene.add(bullet);
+  bullets.push({ mesh: bullet, dir: dir, life: 1.0 });
 
-  // Harakat
-  const forward = new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));
-  const right = new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
-  player.position.addScaledVector(forward, -joy.y*6*dt);
-  player.position.addScaledVector(right, joy.x*6*dt);
-  player.position.x = THREE.MathUtils.clamp(player.position.x, -28, 28);
-  player.position.z = THREE.MathUtils.clamp(player.position.z, -28, 28);
-
-  // Kamera
-  const camOffset = new THREE.Vector3(
-    Math.sin(yaw)*Math.cos(pitch)*5,
-    2.2 + Math.sin(pitch)*5,
-    Math.cos(yaw)*Math.cos(pitch)*5
-  );
-  camera.position.copy(player.position).add(camOffset);
-  camera.lookAt(player.position.x, player.position.y+1.5, player.position.z);
-  player.rotation.y = yaw;
-
-  // Dushmanlar
-  enemies.forEach(e=>{
-    const dir = new THREE.Vector3(
-      player.position.x-e.position.x, 0,
-      player.position.z-e.position.z
-    );
-    const dist = dir.length();
-    if(dist > 1.4){
-      dir.normalize();
-      e.position.addScaledVector(dir, 1.6*dt);
-      e.rotation.y = Math.atan2(-dir.x,-dir.z);
-      // To'siqlardan qochish (oddiy)
-      obstacles.forEach(o=>{
-        const dx = e.position.x-o.position.x;
-        const dz = e.position.z-o.position.z;
-        const d2 = Math.hypot(dx,dz);
-        if(d2 < 1.6 && d2 > 0.01){
-          e.position.x += dx/d2 * 1.5 * dt;
-          e.position.z += dz/d2 * 1.5 * dt;
-        }
-      });
-    } else {
-      hp -= 12*dt;
-      document.getElementById('hp').textContent = Math.max(0,Math.floor(hp));
-    }
-  });
-
-  // O'qlar
-  for(let i=bullets.length-1; i>=0; i--){
-    const b = bullets[i];
-    b.mesh.position.addScaledVector(b.vel, dt*60);
-    b.life -= dt;
-    let hit = false;
-    for(let j=enemies.length-1; j>=0; j--){
-      const e = enemies[j];
-      if(b.mesh.position.distanceTo(e.position.clone().setY(1.4)) < 1.1){
-        scene.remove(e); enemies.splice(j,1);
-        scene.remove(b.mesh); bullets.splice(i,1);
-        score++;
-        document.getElementById('score').textContent = score;
-        hit = true; break;
-      }
-    }
-    if(hit) continue;
-    if(b.life <= 0){ scene.remove(b.mesh); bullets.splice(i,1); }
-  }
-
-  // O'yin tugashi
-  if(hp <= 0){
-    running = false;
-    document.getElementById('msg').textContent = '💀 JANG TUGADI — Ball: '+score;
-    document.getElementById('overlay').style.display = 'flex';
-    document.querySelector('#overlay h1').textContent = '💀 JANG TUGADI';
-    document.querySelector('#overlay p').innerHTML = 'Sizning ballingiz: <b>'+score+'</b><br>Qayta urinib ko\'ring!';
-    document.getElementById('play').textContent = "QAYTA O'YNASH";
+  // Tegdi
+  if (intersects.length > 0) {
+    let hitGroup = intersects[0].object.parent;
+    scene.remove(hitGroup);
+    enemies = enemies.filter(e => e.mesh !== hitGroup);
+    score++;
+    document.getElementById('score').textContent = score;
   }
 }
 
-function loop(now){
-  const dt = Math.min((now-lastTime)/1000, 0.05);
-  lastTime = now;
-  update(dt);
-  if(firing && running && now-lastShot > 280){ shoot(); lastShot = now; }
-  renderer.render(scene, camera);
-  requestAnimationFrame(loop);
-}
+// --- BOSHQARUV ---
+const keys = { w: false, a: false, s: false, d: false };
+let yaw = 0, pitch = 0;
+let joy = {x:0, y:0};
+let hp = 100, score = 0, running = false;
 
 // Joystick
 const joyEl = document.getElementById('joy');
 const stick = document.getElementById('stick');
 let joyActive = false;
-joyEl.addEventListener('pointerdown', e=>{ joyActive=true; joyEl.setPointerCapture(e.pointerId); moveJoy(e); });
-joyEl.addEventListener('pointermove', e=>{ if(joyActive) moveJoy(e); });
-joyEl.addEventListener('pointerup', stopJoy);
-joyEl.addEventListener('pointercancel', stopJoy);
-function moveJoy(e){
+joyEl.addEventListener('pointerdown', e => { joyActive = true; joyEl.setPointerCapture(e.pointerId); });
+joyEl.addEventListener('pointermove', e => {
+  if(!joyActive) return;
   const r = joyEl.getBoundingClientRect();
   let x = e.clientX - r.left - r.width/2;
   let y = e.clientY - r.top - r.height/2;
-  const max = 36, d = Math.hypot(x,y);
+  const max = 30, d = Math.hypot(x,y);
   if(d > max){ x = x/d*max; y = y/d*max; }
   joy.x = x/max; joy.y = y/max;
   stick.style.transform = `translate(${x}px,${y}px)`;
-}
-function stopJoy(){ joyActive=false; joy={x:0,y:0}; stick.style.transform='translate(0,0)'; }
+});
+joyEl.addEventListener('pointerup', () => { joyActive = false; joy={x:0,y:0}; stick.style.transform='translate(0,0)'; });
 
-// Qarash (o'ng tomon)
+// Qarash
 const lookEl = document.getElementById('look');
 let lookActive = false, lastX = 0, lastY = 0;
-lookEl.addEventListener('pointerdown', e=>{
-  lookActive = true; lastX = e.clientX; lastY = e.clientY;
-  lookEl.setPointerCapture(e.pointerId);
-});
-lookEl.addEventListener('pointermove', e=>{
+lookEl.addEventListener('pointerdown', e => { lookActive = true; lastX = e.clientX; lastY = e.clientY; lookEl.setPointerCapture(e.pointerId); });
+lookEl.addEventListener('pointermove', e => {
   if(!lookActive) return;
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
+  yaw -= (e.clientX - lastX) * 0.003;
+  pitch = THREE.MathUtils.clamp(pitch - (e.clientY - lastY) * 0.003, -1.2, 1.2);
   lastX = e.clientX; lastY = e.clientY;
-  yaw -= dx * 0.005;
-  pitch = THREE.MathUtils.clamp(pitch + dy*0.004, -0.6, 0.6);
 });
-lookEl.addEventListener('pointerup', ()=> lookActive=false);
-lookEl.addEventListener('pointercancel', ()=> lookActive=false);
+lookEl.addEventListener('pointerup', () => lookActive = false);
 
 // Otish
+let firing = false, lastShotTime = 0;
 const fireBtn = document.getElementById('fire');
-fireBtn.addEventListener('pointerdown', e=>{ e.preventDefault(); firing=true; });
-fireBtn.addEventListener('pointerup', ()=> firing=false);
-fireBtn.addEventListener('pointerleave', ()=> firing=false);
+fireBtn.addEventListener('pointerdown', e => { e.preventDefault(); firing = true; });
+fireBtn.addEventListener('pointerup', () => firing = false);
+fireBtn.addEventListener('pointerleave', () => firing = false);
 
-// Boshlash
-document.getElementById('play').onclick = ()=>{
-  enemies.forEach(e=>scene.remove(e)); bullets.forEach(b=>scene.remove(b.mesh));
-  enemies=[]; bullets=[]; score=0; hp=100; yaw=0; pitch=0;
-  player.position.set(0,0,10);
-  document.getElementById('score').textContent = 0;
-  document.getElementById('hp').textContent = 100;
-  document.getElementById('msg').textContent = '';
+// --- O'YIN SIKLI ---
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.1);
+
+  if(running) {
+    // Kamerani burish
+    camera.rotation.order = 'YXZ';
+    camera.rotation.y = yaw;
+    camera.rotation.x = pitch;
+
+    // Harakat (WASD / Joystick)
+    const speed = 8;
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    forward.y = 0; forward.normalize();
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    right.y = 0; right.normalize();
+
+    const moveDir = new THREE.Vector3();
+    // Joystick harakati
+    moveDir.addScaledVector(forward, -joy.y);
+    moveDir.addScaledVector(right, joy.x);
+    
+    if(moveDir.length() > 0) {
+      moveDir.normalize();
+      camera.position.addScaledVector(moveDir, speed * dt);
+      
+      // Devorlardan chiqmaslik (oddiy chegara)
+      camera.position.x = THREE.MathUtils.clamp(camera.position.x, -45, 45);
+      camera.position.z = THREE.MathUtils.clamp(camera.position.z, -45, 45);
+    }
+    camera.position.y = 1.6; // Ko'z balandligi
+
+    // Otish
+    if(firing && Date.now() - lastShotTime > 150) {
+      playerShoot();
+      lastShotTime = Date.now();
+    }
+
+    // Dushmanlar AI (Sizga qarab keladi va o'q otadi)
+    enemies.forEach(e => {
+      const dir = new THREE.Vector3().subVectors(camera.position, e.mesh.position);
+      dir.y = 0;
+      const dist = dir.length();
+      
+      if(dist > 5) { // 5 metrgacha yaqinlashadi
+        dir.normalize();
+        e.mesh.position.addScaledVector(dir, 2 * dt);
+      } else {
+        // O'q otish
+        if(Date.now() - e.lastShot > 1500) {
+          hp -= 5; // Har o'qda 5 HP ketadi
+          document.getElementById('hp').textContent = Math.max(0, Math.floor(hp));
+          e.lastShot = Date.now();
+          
+          // Dushman o'qi vizuali
+          const eb = new THREE.Mesh(new THREE.SphereGeometry(0.08), new THREE.MeshBasicMaterial({color: 0xff0000}));
+          eb.position.copy(e.mesh.position);
+          scene.add(eb);
+          enemyBullets.push({ mesh: eb, dir: dir.clone(), life: 1.0 });
+        }
+      }
+    });
+
+    // O'qlarni yangilash
+    for(let i = bullets.length-1; i >= 0; i--) {
+      bullets[i].mesh.position.addScaledVector(bullets[i].dir, 50 * dt);
+      bullets[i].life -= dt;
+      if(bullets[i].life <= 0) { scene.remove(bullets[i].mesh); bullets.splice(i, 1); }
+    }
+    for(let i = enemyBullets.length-1; i >= 0; i--) {
+      enemyBullets[i].mesh.position.addScaledVector(enemyBullets[i].dir, 20 * dt);
+      enemyBullets[i].life -= dt;
+      if(enemyBullets[i].life <= 0) { scene.remove(enemyBullets[i].mesh); enemyBullets.splice(i, 1); }
+    }
+
+    // O'yin tugashi
+    if(hp <= 0) {
+      running = false;
+      document.getElementById('msg').textContent = "HALOK BO'LDINGIZ";
+      document.getElementById('overlay').style.display = 'flex';
+      document.querySelector('#overlay h1').textContent = "O'YIN TUGADI";
+      document.querySelector('#overlay p').innerHTML = `Sizning natijangiz: <b>${score}</b> ta dushman.<br>Qayta jang qilasizmi?`;
+      document.getElementById('play').textContent = "QAYTA O'YNASH";
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
+// O'yinni boshlash
+document.getElementById('play').onclick = () => {
+  // Tozalash
+  enemies.forEach(e => scene.remove(e.mesh));
+  bullets.forEach(b => scene.remove(b.mesh));
+  enemyBullets.forEach(b => scene.remove(b.mesh));
+  enemies = []; bullets = []; enemyBullets = [];
+  
+  // Reset
+  camera.position.set(0, 1.6, 0);
+  hp = 100; score = 0; yaw = 0; pitch = 0;
+  document.getElementById('hp').textContent = hp;
+  document.getElementById('score').textContent = score;
   document.getElementById('overlay').style.display = 'none';
+  document.getElementById('msg').textContent = '';
+  
   running = true;
-  for(let i=0;i<5;i++) spawnEnemy();
+  for(let i=0; i<6; i++) spawnEnemy();
 };
 
-setInterval(()=>{ if(running) spawnEnemy(); }, 3000);
+// Har 2.5 soniyada yangi dushman
+setInterval(() => { if(running) spawnEnemy(); }, 2500);
 
-window.addEventListener('resize', ()=>{
-  camera.aspect = innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-});
-
-requestAnimationFrame(loop);
+animate();
 </script>
 </body>
 </html>
