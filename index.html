@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MEGA ARENA</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#0b1020;
+ color:white;
+ font-family:Arial,sans-serif;
+ padding:20px;
+}
+.header{
+ background:#171f36;
+ padding:20px;
+ border-radius:18px;
+}
+h1{color:#36e0ff}
+.coin{
+ color:#ffd447;
+ font-size:22px;
+ font-weight:bold;
+}
+h2{margin-top:28px}
+.games{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:14px;
+}
+.game{
+ background:#171f36;
+ border:1px solid #293858;
+ border-radius:16px;
+ padding:20px 10px;
+ text-align:center;
+}
+.icon{font-size:38px}
+button{
+ background:#1678ff;
+ border:0;
+ color:white;
+ padding:12px;
+ border-radius:10px;
+ width:100%;
+ font-weight:bold;
+}
+.note{
+ color:#9baac5;
+ font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>🎮 MEGA ARENA</h1>
+<p>Salom, o‘yinchi!</p>
+<div class="coin">🪙 5 COIN</div>
+<p class="note">Sening boshlang‘ich bonusing</p>
+</div>
+
+<h2>🔥 O‘yinlar</h2>
+
+<div class="games">
+
+<div class="game">
+<div class="icon">🔫</div>
+<h3>Shooting Arena</h3>
+<p>2–3 o‘yinchi</p>
+<button>O‘ynash</button>
+</div>
+
+<div class="game">
+<div class="icon">🏃</div>
+<h3>Survival Arena</h3>
+<p>2–10 o‘yinchi</p>
+<button>O‘ynash</button>
+</div>
+
+<div class="game">
+<div class="icon">🏎️</div>
+<h3>Car Racing</h3>
+<p>2–10 o‘yinchi</p>
+<button>O‘ynash</button>
+</div>
+
+<div class="game">
+<div class="icon">💣</div>
+<h3>Bomb Arena</h3>
+<p>2–10 o‘yinchi</p>
+<button>O‘ynash</button>
+</div>
+
+<div class="game">
+<div class="icon">🧗</div>
+<h3>Obstacle Challenge</h3>
+<p>2–20 o‘yinchi</p>
+<button>O‘ynash</button>
+</div>
+
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+</script>
+
+</body>
+  </html>
